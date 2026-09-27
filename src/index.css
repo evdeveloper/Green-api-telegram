@@ -1,0 +1,171 @@
+@import 'tailwindcss';
+
+/*
+ * Токены сняты с дизайн-системы web.max.ru (CSS-переменные светлой и тёмной
+ * тем), чтобы интерфейс читался как MAX, а не как абстрактный мессенджер.
+ * Сам экран чата в MAX закрыт авторизацией, поэтому композиция собрана по
+ * общепринятой раскладке мессенджера, а палитра, типографика и радиусы —
+ * из реальных токенов.
+ *
+ * Названия ролевые (surface / panel / text-secondary), а не «серый-200»:
+ * тёмная тема переопределяет те же имена ниже.
+ */
+@theme {
+  /* Фон приложения и панели */
+  --color-surface: #edeef2;
+  --color-panel: #ffffff;
+  --color-panel-muted: #f5f7fa;
+  --color-panel-hover: #f0f2f6;
+  --color-panel-active: #e6e9ef;
+
+  /* Текст */
+  --color-text-primary: #060708;
+  --color-text-secondary: #060708ad;
+  --color-text-tertiary: #06070899;
+  --color-text-inverse: #ffffff;
+
+  --color-divider: #0c0d0e29;
+
+  /*
+   * Акцент. В MAX это #007aff, но белый текст на нём даёт контраст 4.02 —
+   * ниже порога WCAG AA (4.5) для основного текста, а на акценте у нас и
+   * подписи кнопок, и текст исходящих сообщений. Взят ближайший более
+   * тёмный тон того же семейства: 5.65 с белым.
+   */
+  --color-accent: #0062d6;
+  --color-accent-hover: #0068e0;
+  --color-accent-pressed: #0059c2;
+
+  /* Бабблы: входящий — панель, исходящий — акцент */
+  --color-bubble-in: #ffffff;
+  --color-bubble-out: #0062d6;
+  --color-bubble-out-text: #ffffff;
+
+  /* Статусы */
+  --color-badge: #ff303c;
+  --color-danger: #ff303c;
+  --color-success: #0fa958;
+
+  /* Типографика MAX */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, Roboto, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.25rem;
+  --text-body--letter-spacing: 0.15px;
+  --text-detail: 0.9375rem;
+  --text-detail--line-height: 1.25rem;
+  --text-detail--letter-spacing: 0.15px;
+  --text-title: 1.0625rem;
+  --text-title--line-height: 1.5rem;
+
+  /* Радиусы */
+  --radius-bubble: 1.125rem;
+  --radius-panel: 1rem;
+  --radius-control: 0.75rem;
+}
+
+/*
+ * Тёмная тема. Переопределяются только те же роли — ни один цвет не имеет
+ * единственного объявления внутри media-блока.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #0f0f12;
+    --color-panel: #17181c;
+    --color-panel-muted: #1e1f24;
+    --color-panel-hover: #20222b;
+    --color-panel-active: #25262d;
+
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #ffffffad;
+    --color-text-tertiary: #ffffff99;
+
+    --color-divider: #ffffff1f;
+
+    /*
+     * Акцент намеренно НЕ переопределяется. В MAX тёмная тема берёт более
+     * светлый #016fe7, но на нём приглушённое время в баббле (белый 90%)
+     * даёт 4.15 — ниже AA. Один акцент на обе темы проходит порог в обеих.
+     */
+
+    --color-bubble-in: #25262d;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  letter-spacing: var(--text-body--letter-spacing);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Видимый фокус для клавиатурной навигации — единый на все интерактивные элементы. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .input {
+    width: 100%;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-divider);
+    background-color: var(--color-panel);
+    color: var(--color-text-primary);
+    padding: 0.625rem 0.875rem;
+    font-size: var(--text-detail);
+    line-height: var(--text-detail--line-height);
+    outline: none;
+  }
+
+  .input::placeholder {
+    color: var(--color-text-tertiary);
+  }
+
+  .input:focus-visible {
+    border-color: var(--color-accent);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  }
+
+  .btn-accent {
+    border-radius: var(--radius-control);
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
+    font-size: var(--text-detail);
+    font-weight: 500;
+    padding: 0.625rem 1rem;
+  }
+
+  .btn-accent:hover:not(:disabled) {
+    background-color: var(--color-accent-hover);
+  }
+
+  .btn-accent:active:not(:disabled) {
+    background-color: var(--color-accent-pressed);
+  }
+
+  .btn-accent:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+/* Тонкий скроллбар, как в web-клиентах мессенджеров. */
+@layer utilities {
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-divider) transparent;
+  }
+}
