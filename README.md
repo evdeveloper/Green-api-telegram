@@ -259,7 +259,7 @@ API отдаёт `Access-Control-Allow-Origin: *`, поэтому приложе
 2. открыть **Settings → Pages → Build and deployment** и выбрать **Source: GitHub Actions**;
 3. дождаться выполнения workflow во вкладке **Actions**.
 
-Приложение будет доступно по адресу `https://<логин>.github.io/<имя-репозитория>/`.
+Приложение будет доступно по адресу `https://evdeveloper.github.io/Green-api-telegram/`.
 
 > [!CAUTION]
 > Не добавляйте `VITE_DEV_ID_INSTANCE` и `VITE_DEV_API_TOKEN_INSTANCE` в секреты репозитория
